@@ -1,0 +1,44 @@
+ body {
+      background-color: #ffffff;
+      
+    }
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      color: #000;
+    }
+    
+    label {
+      font-size: 22px;
+      font-weight: bold;
+      
+      
+    }
+    input[type="text"],
+    input[type="number"],
+    select {
+      font-size: 20px;
+      width: 100%;
+     
+      border: 2px solid #000;
+      border-radius: 5px;
+      color: #1EB304;
+    }
+    .radio-group {
+     
+      gap: 20px;
+      
+    }
+    button {
+      width: 100%;
+      background-color: #000;
+      color: white;
+      font-size: 28px;
+     
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #333;
+    }

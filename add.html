@@ -1,0 +1,130 @@
+
+<html>
+<head>
+  
+  <title>Add Transaction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="tadd.css"></link>
+</head>
+<body>
+
+  <h1>Add Transaction</h1>
+
+  <div class="form-group">
+    <label>Date</label>
+    <input type="text" id="date" readonly>
+  </div>
+
+  <div class="form-group">
+    <label>Type</label>
+    <div class="radio-group">
+      <label><input type="radio" name="type" value="receipt" checked> Receipt</label>
+      <label><input type="radio" name="type" value="payment"> Payment</label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+  </div>
+
+  <div class="form-group">
+    <label>Category</label>
+    <select id="category"></select>
+  </div>
+
+  <div class="form-group">
+    <label>Notes (optional)</label>
+    <input type="text" id="notes" maxlength="20">
+  </div>
+
+  <button onclick="addTransaction()">Add Transaction</button>
+
+  <script>
+    
+    const support = {
+      spine: (i) => ["Sales", "Rents", "interest", "profits(investments)", "other"][i] || "other",
+      spine2: (i) => [
+        "COGS", "Salaries", "Rent", "office", "utilities",
+        "insurance", "depreciation", "Taxes", "Marketing", "Others"
+      ][i] || "Others",
+    };
+
+    const incomeCategories = [
+      "Sales", "Rents", "interest", "profits(investments)", "other"
+    ];
+
+    const expenseCategories = [
+      "COGS", "Salaries", "Rent", "office", "utilities",
+        "insurance", "depreciation", "Taxes", "Marketing", "Others"
+    ];
+
+    
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("en-GB");
+    const code = `${now.getMonth() + 1}${now.getFullYear()}`;
+    document.getElementById("date").value = dateStr;
+
+    
+    function populateCategories(isReceipt) {
+      const select = document.getElementById("category");
+      select.innerHTML = "";
+      const categories = isReceipt ? incomeCategories : expenseCategories;
+      categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+      });
+    }
+
+   
+    document.querySelectorAll("input[name='type']").forEach(radio => {
+      radio.addEventListener("change", () => {
+        populateCategories(radio.value === "receipt");
+      });
+    });
+
+    populateCategories(true); 
+
+    function addTransaction() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const notes = document.getElementById("notes").value || "not mentioned";
+      const date = document.getElementById("date").value;
+      const type = document.querySelector("input[name='type']:checked").value === "receipt";
+      const category = document.getElementById("category").value;
+	  
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+
+      const transaction = {
+        acode: parseInt(code),
+        atype: type,
+        adate: date,
+        amount: amount,
+        anote: notes,
+        acat: category
+      };
+	  ttype = "expenses"
+	  if(type){ ttype="revenue" }
+	  if(confirm("Do you want to add an "+ttype+" of "+amount+" in "+category+" category?") )
+	  {
+
+      let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+      transactions.push(transaction);
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+
+      alert("Transaction added!");
+      document.getElementById("amount").value = "";
+      document.getElementById("notes").value = "";
+	  }
+	  
+	  
+    }
+  </script>
+
+</body>
+</html>

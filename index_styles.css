@@ -1,0 +1,43 @@
+body {
+      background-color: #ffffff;
+     
+    }
+    h1, h2 {
+      text-align: center;
+      color: #000;
+    }
+    .summary {
+      background: #0000ff;
+      color: white;
+     
+      text-align: center;
+      font-size: 24px;
+    }
+    table {
+      width: 100%;
+     
+     
+      background-color: white;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid black;
+      text-align: center;
+    }
+    .receipt, .payment {
+      margin-top: 40px;
+    }
+    .filter {
+      
+      justify-content: center;
+      
+    }
+    select {
+     
+      font-size: 16px;
+    }
+    .chart-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 30px auto;
+    }
