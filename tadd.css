@@ -1,44 +1,71 @@
- body {
-      background-color: #ffffff;
-      
-    }
-    h1 {
-      text-align: center;
-      font-size: 32px;
-      color: #000;
-    }
-    
-    label {
-      font-size: 22px;
-      font-weight: bold;
-      
-      
-    }
-    input[type="text"],
-    input[type="number"],
-    select {
-      font-size: 20px;
-      width: 100%;
-     
-      border: 2px solid #000;
-      border-radius: 5px;
-      color: #1EB304;
-    }
-    .radio-group {
-     
-      gap: 20px;
-      
-    }
-    button {
-      width: 100%;
-      background-color: #000;
-      color: white;
-      font-size: 28px;
-     
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    button:hover {
-      background-color: #333;
-    }
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  font-size: 16px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #1f1f1f;
+  color: #00ff9d;
+  margin-bottom: 15px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+button {
+  width: 100%;
+  background-color: #00b894;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #019875;
+}
+
+/* Smooth fade */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+body, input, select, button {
+  animation: fadeIn 0.5s ease-in-out;
+}
+.fade-start {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease-out;
+}
+.appear {
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -147,36 +147,87 @@ const months = [
 
   let incomeChart, expenseChart;
   function renderPieChart(canvasId, dataMap, label) {
-    const ctx = document.getElementById(canvasId).getContext("2d");
-    const labels = Object.keys(dataMap);
-    const data = Object.values(dataMap);
+  const ctx = document.getElementById(canvasId).getContext("2d");
+  const labels = Object.keys(dataMap);
+  const data = Object.values(dataMap);
 
-    const config = {
-      type: "pie",
-      data: {
-        labels: labels,
-        datasets: [{
-          label,
-          data: data,
-          backgroundColor: colors.slice(0, labels.length),
-        }]
+  const config = {
+    type: "pie",
+    data: {
+      labels: labels,
+      datasets: [{
+        label,
+        data: data,
+        backgroundColor: [
+          "#00b894", "#0984e3", "#6c5ce7", "#d63031", "#fdcb6e",
+          "#e17055", "#2d3436", "#fab1a0", "#55efc4", "#ffeaa7"
+        ],
+        borderColor: "#121212",
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: {
+        animateScale: true,
+        animateRotate: true
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom' }
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: "#e0e0e0",
+            font: { size: 14 }
+          }
+        },
+        tooltip: {
+          backgroundColor: "#1f1f1f",
+          titleColor: "#00ff9d",
+          bodyColor: "#ffffff",
+          borderColor: "#333",
+          borderWidth: 1
         }
       }
-    };
-
-    if (canvasId === "incomeChart") {
-      if (incomeChart) incomeChart.destroy();
-      incomeChart = new Chart(ctx, config);
-    } else {
-      if (expenseChart) expenseChart.destroy();
-      expenseChart = new Chart(ctx, config);
     }
+  };
+
+  if (canvasId === "incomeChart") {
+    if (incomeChart) incomeChart.destroy();
+    incomeChart = new Chart(ctx, config);
+  } else {
+    if (expenseChart) expenseChart.destroy();
+    expenseChart = new Chart(ctx, config);
   }
+}
+// Smooth scroll animation for internal links
+document.querySelectorAll('a[href^="#"], button').forEach(el => {
+  el.addEventListener('click', e => {
+    const targetId = el.getAttribute('href');
+    if (targetId && targetId.startsWith("#")) {
+      e.preventDefault();
+      document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// Fade-in on scroll
+const faders = document.querySelectorAll('.summary, .chart-container, table, h2');
+
+const appearOptions = { threshold: 0.1 };
+
+const appearOnScroll = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('appear');
+    observer.unobserve(entry.target);
+  });
+}, appearOptions);
+
+faders.forEach(fader => {
+  fader.classList.add('fade-start');
+  appearOnScroll.observe(fader);
+});
+
 </script>
 
 
