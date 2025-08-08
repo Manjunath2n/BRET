@@ -51,7 +51,7 @@ button:hover {
   background-color: #019875;
 }
 
-/* Smooth fade */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

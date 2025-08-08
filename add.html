@@ -5,6 +5,7 @@
   <title>Add Transaction</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="tadd.css"></link>
+  <script src="Dialog.js"></script>
 </head>
 <body>
 
@@ -39,6 +40,10 @@
   </div>
 
   <button onclick="addTransaction()">Add Transaction</button>
+  
+  
+
+
 
   <script>
     
@@ -58,7 +63,9 @@
       "COGS", "Salaries", "Rent", "office", "utilities",
         "insurance", "depreciation", "Taxes", "Marketing", "Others"
     ];
+    
 
+  
     
     const now = new Date();
     const dateStr = now.toLocaleDateString("en-GB");
@@ -96,7 +103,7 @@
 	  
 
       if (isNaN(amount) || amount <= 0) {
-        alert("Please enter a valid amount.");
+        alertCustom("Please enter a valid amount.");
         return;
       }
 
@@ -110,17 +117,17 @@
       };
 	  ttype = "expenses"
 	  if(type){ ttype="revenue" }
-	  if(confirm("Do you want to add an "+ttype+" of "+amount+" in "+category+" category?") )
-	  {
+	  const famt = Number(amount).toLocaleString('en-IN');
+	  confirmCustom(`Do you want to add an ${ttype} of ₹${famt} in ${category} category?`,function(result) {
+		if (result) {
+			let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+			transactions.push(transaction);
+			localStorage.setItem("transactions", JSON.stringify(transactions));
 
-      let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
-      transactions.push(transaction);
-      localStorage.setItem("transactions", JSON.stringify(transactions));
-
-      alert("Transaction added!");
-      document.getElementById("amount").value = "";
-      document.getElementById("notes").value = "";
-	  }
+			alertCustom("Transaction added!");
+			document.getElementById("amount").value = "";
+			document.getElementById("notes").value = "";
+	  }});
 	  
 	  
     }
