@@ -87,7 +87,7 @@ button:hover {
 
 /* Chart containers */
 .chart-container {
-  width: 100%;
+  width: fit-content;
   max-width: 600px;
   margin: 30px auto;
   padding: 15px;
@@ -126,3 +126,7 @@ button:hover {
   opacity: 1;
   transform: translateY(0);
 }
+.vis{
+	display:none;
+}
+
