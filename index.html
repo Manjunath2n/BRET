@@ -5,46 +5,48 @@
   <title>HOME</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="chart.js"></script>
+  <script src="calendar.js"></script>
  
   <link rel="Stylesheet" href="index_styles.css">
 </head>
 <body>
-  <!-- Loading Screen -->
 <div id="loading-screen">
-  <div class="loader"></div>
-  <p>Loading...</p>
+  <div class="loader">
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+  </div>
 </div>
 
-<!-- Floating Theme Toggle -->
-<button id="theme-toggle" title="Toggle Theme">🌙</button>
-<script src="theme.js"></script>
-
-
-
-
-  <h1>BREt</h1>
-  
-<center>
-	<a href="add.html"><button>Add transaction</button></a><br>
-	<hr>
-	<br>
-  <div class="filter">
-    <select id="month">
-      <option value="">Select Month</option>
-    </select>
-    <select id="year">
-      <option value="">Select Year</option>
-    </select>
-    <button onclick="filterTransactions()">View</button>
-  </div>
-  </center>
-<hr>
+<div class="back"></div>
+<div class="over"></div>
+<div class = "con">
+  <h1>BReT</h1>
+ <div class= "cflow">
+	
+	<a href="add.html">
+	
+	<div class="card">
+	<h3>
+	Report transaction </h3> <br>
+	<p>
+	Report the transactions that has <br>taken place for future use.</p>
+	</div>
+	</a>
+	<div class="card" onclick="filterTransactions()">
+	<h3>
+	View Statement </h3> <br>
+	<p>
+	Visualize your monthly transactions <br> with organized statement.</p>
+	</div>
+	
+ </div>
+ <br>
 
 <div class = "vis" id = "visible">
   <div class="summary" id="summary"></div>
   <div class="summary" id="savings"></div>
   
-
+<div class= "cflow">
   <div class="chart-container">
     <h2>Receipts Classification</h2>
     <canvas id="incomeChart"></canvas>
@@ -54,9 +56,10 @@
     <h2>Payments Classification</h2>
     <canvas id="expenseChart"></canvas>
   </div>
+  </div>
 <hr>
   <div class="receipt">
-    <h2>All Receipt Transactions</h2>
+    <h1>All Receipt Transactions</h1>
     <table id="receiptTable">
       <thead>
         <tr><th>Date</th><th>Amount</th><th>Category</th><th>Notes</th></tr>
@@ -67,7 +70,7 @@
   
 <hr>
   <div class="payment">
-    <h2>All Payment Transactions</h2>
+    <h1>All Payment Transactions</h1>
     <table id="paymentTable">
       <thead>
         <tr><th>Date</th><th>Amount</th><th>Category</th><th>Notes</th></tr>
@@ -76,7 +79,25 @@
     </table>
   </div>
   </div>
+  </div>
+ 
 <script>
+window.addEventListener("load", () => {
+  const loader = document.getElementById("loading-screen");
+  const content = document.querySelector(".content");
+
+  
+  loader.style.opacity = "0";
+ 
+
+  
+
+  setTimeout(() => {
+    loader.style.display = "none";
+    
+  }, 4000); 
+});
+
 const setv = document.getElementById("visible");
 const months = [
     "January", "February", "March", "April", "May", "June",
@@ -89,31 +110,14 @@ const months = [
     "rgb(255,130,128)", "rgb(255,255,255)", "rgb(51,51,153)",
     "rgb(66,154,124)"
   ];
-	
-  const currentYear = new Date().getFullYear();
-  const monthSelect = document.getElementById("month");
-  const yearSelect = document.getElementById("year");
 
-  months.forEach((m, i) => {
-    const opt = document.createElement("option");
-    opt.value = i + 1;
-    opt.text = m;
-    monthSelect.add(opt);
-  });
-
-  for (let y = currentYear - 1; y <= currentYear + 3; y++) {
-    const opt = document.createElement("option");
-    opt.value = y;
-    opt.text = y;
-    yearSelect.add(opt);
-  }
 
   function filterTransactions() {
-    const m = parseInt(monthSelect.value);
-    const y = parseInt(yearSelect.value);
-    if (!m || !y) return alert("Select both month and year");
+    selectMonthYear((m,y)=> {
+	
+	
 
-    const dcode = parseInt(`${m}${y}`);
+    const dcode = parseInt(`${m+1}${y}`);
     const all = JSON.parse(localStorage.getItem("transactions") || "[]");
     const current = all.filter(t => t.acode === dcode);
 
@@ -148,6 +152,7 @@ const months = [
     renderTable("paymentTable", payments);
     renderPieChart("incomeChart", incomePie, "Income");
     renderPieChart("expenseChart", expensePie, "Expense");
+	});
   }
 
   function renderTable(id, items) {
@@ -218,7 +223,7 @@ const months = [
     expenseChart = new Chart(ctx, config);
   }
 }
-// Smooth scroll animation for internal links
+
 document.querySelectorAll('a[href^="#"], button').forEach(el => {
   el.addEventListener('click', e => {
     const targetId = el.getAttribute('href');
@@ -229,7 +234,7 @@ document.querySelectorAll('a[href^="#"], button').forEach(el => {
   });
 });
 
-// Fade-in on scroll
+
 const faders = document.querySelectorAll('.summary, .chart-container, table, h2');
 
 const appearOptions = { threshold: 0.1 };
@@ -246,41 +251,7 @@ faders.forEach(fader => {
   fader.classList.add('fade-start');
   appearOnScroll.observe(fader);
 });
-
-// Loading screen fade-out
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    document.getElementById("loading-screen").classList.add("hidden");
-  }, 4000); // 7 seconds
-});
-
-// Theme toggle setup
-document.addEventListener("DOMContentLoaded", () => {
-  const themeToggle = document.getElementById("theme-toggle");
-
-  // Apply theme
-  function applyTheme(theme) {
-    if (theme === "light") {
-      document.body.classList.add("light-theme");
-      themeToggle.textContent = "🌞";
-    } else {
-      document.body.classList.remove("light-theme");
-      themeToggle.textContent = "🌙";
-    }
-    localStorage.setItem("theme", theme);
-  }
-
-  // Toggle button click
-  themeToggle.addEventListener("click", () => {
-    const current = localStorage.getItem("theme") || "dark";
-    applyTheme(current === "dark" ? "light" : "dark");
-  });
-
-  // Apply saved theme immediately
-  applyTheme(localStorage.getItem("theme") || "dark");
-});
-
-
+ 
 </script>
 
 
