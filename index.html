@@ -9,8 +9,20 @@
   <link rel="Stylesheet" href="index_styles.css">
 </head>
 <body>
+  <!-- Loading Screen -->
+<div id="loading-screen">
+  <div class="loader"></div>
+  <p>Loading...</p>
+</div>
 
-  <h1>BRET</h1>
+<!-- Floating Theme Toggle -->
+<button id="theme-toggle" title="Toggle Theme">🌙</button>
+<script src="theme.js"></script>
+
+
+
+
+  <h1>BREt</h1>
   
 <center>
 	<a href="add.html"><button>Add transaction</button></a><br>
@@ -234,6 +246,40 @@ faders.forEach(fader => {
   fader.classList.add('fade-start');
   appearOnScroll.observe(fader);
 });
+
+// Loading screen fade-out
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loading-screen").classList.add("hidden");
+  }, 4000); // 7 seconds
+});
+
+// Theme toggle setup
+document.addEventListener("DOMContentLoaded", () => {
+  const themeToggle = document.getElementById("theme-toggle");
+
+  // Apply theme
+  function applyTheme(theme) {
+    if (theme === "light") {
+      document.body.classList.add("light-theme");
+      themeToggle.textContent = "🌞";
+    } else {
+      document.body.classList.remove("light-theme");
+      themeToggle.textContent = "🌙";
+    }
+    localStorage.setItem("theme", theme);
+  }
+
+  // Toggle button click
+  themeToggle.addEventListener("click", () => {
+    const current = localStorage.getItem("theme") || "dark";
+    applyTheme(current === "dark" ? "light" : "dark");
+  });
+
+  // Apply saved theme immediately
+  applyTheme(localStorage.getItem("theme") || "dark");
+});
+
 
 </script>
 
