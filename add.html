@@ -135,53 +135,6 @@
 	  
     }
   </script>
-<script>
-function addTransaction() {
-  const amount = parseFloat(document.getElementById("amount").value);
-  const notes = document.getElementById("notes").value || "not mentioned";
-  const date = document.getElementById("date").value;
-  const type = document.querySelector("input[name='type']:checked").value === "receipt";
-  const category = document.getElementById("category").value;
-
-  if (isNaN(amount) || amount <= 0) {
-    // Play error sound
-    const errorSound = new Audio('error.mp3'); // Put error.mp3 in the same folder
-    errorSound.play();
-
-    alertCustom("Please enter a valid amount.");
-    return;
-  }
-
-  const transaction = {
-    acode: parseInt(code),
-    atype: type,
-    adate: date,
-    amount: amount,
-    anote: notes,
-    acat: category
-  };
-
-  let ttype = type ? "revenue" : "expenses";
-  const famt = Number(amount).toLocaleString('en-IN');
-
-  confirmCustom(`Do you want to add an ${ttype} of ₹${famt} in ${category} category?`, function(result) {
-    if (result) {
-      let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
-      transactions.push(transaction);
-      localStorage.setItem("transactions", JSON.stringify(transactions));
-
-      // Play success sound
-      const audio = new Audio('success.mp3');
-      audio.play();
-
-      alertCustom("Transaction added!");
-      document.getElementById("amount").value = "";
-      document.getElementById("notes").value = "";
-    }
-  });
-}
-</script>
 
 </body>
 </html>
-

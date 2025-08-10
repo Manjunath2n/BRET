@@ -43,9 +43,25 @@
  <br>
 
 <div class = "vis" id = "visible">
-  <div class="summary" id="summary"></div>
-  <div class="summary" id="savings"></div>
-  
+<div class="tcard" >
+	<center>
+	<h3 id="head"></h3>
+	</center>
+  </div>
+<div class= "cflow">
+  <div class="sumcard" >
+	<h4>Revenue</h4>
+	<h3 id="prev"></h3>
+  </div>
+  <div class="sumcard" >
+	<h4>Expense</h4>
+	<h3 id="pexp"></h3>
+  </div>
+  <div class="sumcard" >
+	<h4 id="lp"></h4>
+	<h3 id="lpamt"></h3>
+  </div>
+ </div> 
 <div class= "cflow">
   <div class="chart-container">
     <h2>Receipts Classification</h2>
@@ -57,7 +73,17 @@
     <canvas id="expenseChart"></canvas>
   </div>
   </div>
-<hr>
+<div class= "cflow">
+  <div class="chartcbar">
+    <h2>Revenue v/s Expenses (Catogerized) </h2>
+    <canvas id="barChart" width = "1000px"></canvas>
+	</div>
+  </div>
+  <br>
+  <center>
+ <div class="neon-btn" onclick="downloadReport()">Download statement as pdf</div>
+ </center>
+<br>
   <div class="receipt">
     <h1>All Receipt Transactions</h1>
     <table id="receiptTable">
@@ -78,8 +104,13 @@
       <tbody></tbody>
     </table>
   </div>
+ 
   </div>
   </div>
+  
+<script src="jspdf.js"></script>
+<script src="autotable.js"></script>
+<script src="pdfdownload.js"></script>
  
 <script>
 window.addEventListener("load", () => {
@@ -95,7 +126,7 @@ window.addEventListener("load", () => {
   setTimeout(() => {
     loader.style.display = "none";
     
-  }, 4000); 
+  }, 750); 
 });
 
 const setv = document.getElementById("visible");
@@ -105,12 +136,11 @@ const months = [
   ];
 
   const colors = [
-    "rgb(128,0,0)", "rgb(0,128,0)", "rgb(0,0,140)", "rgb(128,125,0)",
-    "rgb(128,0,128)", "rgb(0,125,128)", "rgb(153,153,255)",
-    "rgb(255,130,128)", "rgb(255,255,255)", "rgb(51,51,153)",
-    "rgb(66,154,124)"
+    "#00b894", "#0984e3", "#6c5ce7", "#d63031", "#fdcb6e",
+          "#e17055", "#2d3436", "#fab1a0", "#55efc4", "#ffeaa7"
+        
   ];
-
+	const mlist = [ "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
   function filterTransactions() {
     selectMonthYear((m,y)=> {
@@ -118,6 +148,7 @@ const months = [
 	
 
     const dcode = parseInt(`${m+1}${y}`);
+	
     const all = JSON.parse(localStorage.getItem("transactions") || "[]");
     const current = all.filter(t => t.acode === dcode);
 
@@ -137,19 +168,28 @@ const months = [
       }
     });
 
-    document.getElementById("summary").innerText =
-      `Total Revenue: ₹${incomeTotal}, Total Expense: ₹${expenseTotal}`;
+    document.getElementById("prev").innerText =
+      `₹${formatIndianNumber(incomeTotal)}`;
+	 document.getElementById("pexp").innerText =
+      `₹${formatIndianNumber(expenseTotal)}`;
+	 const mshort = mlist[m];
+	document.getElementById("head").innerText =
+      `Statement report of ${mshort}, ${y}`;
+
 
     const diff = incomeTotal - expenseTotal;
-    document.getElementById("savings").innerText = 
+    document.getElementById("lp").innerText = 
       diff >= 0
-        ? `Profit: ₹${diff}`
-        : `Loss: ₹${Math.abs(diff)}`;
-    document.getElementById("savings").style.color = diff >= 0 ? "green" : "red";
+        ? `Profit`
+        : `Loss`;
+	document.getElementById("lpamt").innerText = `₹${formatIndianNumber(Math.abs(diff))}`;
+    document.getElementById("lpamt").style.color = diff >= 0 ? "green" : "red";
 	setv.style.display = 'block';
 
     renderTable("receiptTable", receipts);
     renderTable("paymentTable", payments);
+	renderBarChart("barChart", incomeTotal, expensePie);
+
     renderPieChart("incomeChart", incomePie, "Income");
     renderPieChart("expenseChart", expensePie, "Expense");
 	});
@@ -182,10 +222,7 @@ const months = [
       datasets: [{
         label,
         data: data,
-        backgroundColor: [
-          "#00b894", "#0984e3", "#6c5ce7", "#d63031", "#fdcb6e",
-          "#e17055", "#2d3436", "#fab1a0", "#55efc4", "#ffeaa7"
-        ],
+        backgroundColor: colors,
         borderColor: "#121212",
         borderWidth: 2
       }]
@@ -223,6 +260,85 @@ const months = [
     expenseChart = new Chart(ctx, config);
   }
 }
+let barChart;
+function renderBarChart(canvasId, incomeTotal, expenseDataMap) {
+  const ctx = document.getElementById(canvasId).getContext("2d");
+
+  
+ const sortedExpenses = Object.entries(expenseDataMap)
+  .sort((a, b) => b[1] - a[1]);
+
+const expenseLabels = sortedExpenses.map(item => item[0]);
+const expenseValues = sortedExpenses.map(item => item[1]);
+
+  const labels = ["Total Revenue", ...expenseLabels];
+  const data = [incomeTotal, ...expenseValues];
+
+  
+  const revenueCanvas = document.createElement("canvas");
+  const revenueCtx = revenueCanvas.getContext("2d");
+  revenueCanvas.width = 20;
+  revenueCanvas.height = 20;
+  revenueCtx.fillStyle = "#00b894";
+  revenueCtx.fillRect(0, 0, 20, 20);
+  revenueCtx.strokeStyle = "#ffffff";
+  revenueCtx.lineWidth = 4;
+  revenueCtx.beginPath();
+  revenueCtx.moveTo(0, 20);
+  revenueCtx.lineTo(20, 0);
+  revenueCtx.stroke();
+  const stripedPattern = ctx.createPattern(revenueCanvas, "repeat");
+
+  
+  const expenseColors = expenseLabels.map((_, i) => colors[i % colors.length]);
+  const backgroundColors = [stripedPattern, ...expenseColors];
+
+  const config = {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Amount",
+        data: data,
+        backgroundColor: backgroundColors,
+        borderColor: "#121212",
+        borderWidth: 2,
+		barThickness: 33
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          ticks: { color: "#e0e0e0", font: { size: 14 } },
+          grid: { color: "#444" }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: "#e0e0e0", font: { size: 14 } },
+          grid: { color: "#444" }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: { color: "#e0e0e0", font: { size: 14 } }
+        },
+        tooltip: {
+          backgroundColor: "#1f1f1f",
+          titleColor: "#00ff9d",
+          bodyColor: "#ffffff",
+          borderColor: "#333",
+          borderWidth: 1
+        }
+      }
+    }
+  };
+
+  if (barChart) barChart.destroy();
+  barChart = new Chart(ctx, config);
+}
+
+
 
 document.querySelectorAll('a[href^="#"], button').forEach(el => {
   el.addEventListener('click', e => {
@@ -251,6 +367,27 @@ faders.forEach(fader => {
   fader.classList.add('fade-start');
   appearOnScroll.observe(fader);
 });
+
+
+function formatIndianNumber(num) {
+  if (num >= 10000000) {
+    
+    let val = (num / 10000000).toFixed(2);
+    return removeTrailingZero(val) + " Cr";
+  } else if (num >= 100000) {
+    
+    let val = (num / 100000).toFixed(2);
+    return removeTrailingZero(val) + " L";
+  } else {
+    
+    return num.toLocaleString('en-IN');
+  }
+}
+
+function removeTrailingZero(val) {
+  return val.replace(/\.00$/, ''); 
+}
+
  
 </script>
 
