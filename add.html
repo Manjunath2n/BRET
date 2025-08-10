@@ -5,7 +5,7 @@
   <title>Add Transaction</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="tadd.css"></link>
-  <script src="Dialog.js"></script>
+  <script src="dialog/dialog.js"></script>
 </head>
 <body>
 <div class="back"></div>
@@ -106,6 +106,8 @@
 	  
 
       if (isNaN(amount) || amount <= 0) {
+		 const errorSound = new Audio('sound/error.mp3'); 
+			errorSound.play();
         alertCustom("Please enter a valid amount.");
         return;
       }
@@ -126,6 +128,8 @@
 			let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
 			transactions.push(transaction);
 			localStorage.setItem("transactions", JSON.stringify(transactions));
+			 const success = new Audio('sound/chord.mp3'); 
+			success.play();
 
 			alertCustom("Transaction added!");
 			document.getElementById("amount").value = "";

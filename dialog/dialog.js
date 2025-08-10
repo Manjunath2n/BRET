@@ -16,15 +16,11 @@ function createModal(message, type, callback) {
 
   
   const box = document.createElement('div');
-  box.style.background = '#121212';
-  box.style.padding = '24px 32px';
-  box.style.borderRadius = '12px';
-  box.style.maxWidth = '90%';
-  box.style.width = '360px';
-  box.style.boxShadow = '0 10px 30px rgba(250,250,250,0.1)';
-  box.style.textAlign = 'center';
-  box.style.fontFamily = 'sans-serif';
-  box.style.animation = 'fadeIn 0.2s ease';
+  box.className = 'diacard';
+ 
+  
+ 
+  
 
   const msg = document.createElement('p');
   msg.textContent = message;
@@ -40,8 +36,8 @@ function createModal(message, type, callback) {
  
   const okBtn = document.createElement('button');
   okBtn.textContent = type === 'alert' ? 'OK' : 'Yes';
-  okBtn.style.background = '#00b894'
-  okBtn.style.color = '#fff';
+  okBtn.style.background = '#fff'
+  okBtn.style.color = '#000';
   okBtn.style.border = 'none';
   okBtn.style.padding = '10px 18px';
   okBtn.style.borderRadius = '6px';
@@ -58,9 +54,9 @@ function createModal(message, type, callback) {
   if (type === 'confirm') {
     const cancelBtn = document.createElement('button');
     cancelBtn.textContent = 'Cancel';
-    cancelBtn.style.background = '#e5e7eb';
-    cancelBtn.style.color = '#111827';
-    cancelBtn.style.border = 'none';
+    cancelBtn.style.background = 'Transparent';
+    cancelBtn.style.color = 'white';
+    cancelBtn.style.border = ' 1px solid rgb(255, 255, 255)';
     cancelBtn.style.padding = '10px 18px';
     cancelBtn.style.borderRadius = '6px';
     cancelBtn.style.cursor = 'pointer';

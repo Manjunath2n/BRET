@@ -4,8 +4,9 @@
   
   <title>HOME</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="chart.js"></script>
-  <script src="calendar.js"></script>
+  <script src="import/chart.js"></script>
+  <script src="dialog/calendar.js"></script>
+  <script src="dialog/dialog.js"></script>
  
   <link rel="Stylesheet" href="index_styles.css">
 </head>
@@ -17,22 +18,25 @@
   </div>
 </div>
 
-<div class="back"></div>
-<div class="over"></div>
+
+  <div class="back"></div>
+  <div class="over"></div>
+
+
 <div class = "con">
   <h1>BReT</h1>
  <div class= "cflow">
 	
 	<a href="add.html">
 	
-	<div class="card">
+	<div class="card tilt">
 	<h3>
 	Report transaction </h3> <br>
 	<p>
 	Report the transactions that has <br>taken place for future use.</p>
 	</div>
 	</a>
-	<div class="card" onclick="filterTransactions()">
+	<div class="card tilt" onclick="filterTransactions()">
 	<h3>
 	View Statement </h3> <br>
 	<p>
@@ -49,32 +53,32 @@
 	</center>
   </div>
 <div class= "cflow">
-  <div class="sumcard" >
+  <div class="sumcard tilt" >
 	<h4>Revenue</h4>
 	<h3 id="prev"></h3>
   </div>
-  <div class="sumcard" >
+  <div class="sumcard tilt" >
 	<h4>Expense</h4>
 	<h3 id="pexp"></h3>
   </div>
-  <div class="sumcard" >
+  <div class="sumcard tilt" >
 	<h4 id="lp"></h4>
 	<h3 id="lpamt"></h3>
   </div>
  </div> 
 <div class= "cflow">
-  <div class="chart-container">
+  <div class="chart-container tilt">
     <h2>Receipts Classification</h2>
     <canvas id="incomeChart"></canvas>
   </div>
 
-  <div class="chart-container">
+  <div class="chart-container tilt">
     <h2>Payments Classification</h2>
     <canvas id="expenseChart"></canvas>
   </div>
   </div>
 <div class= "cflow">
-  <div class="chartcbar">
+  <div class="chartcbar tilt">
     <h2>Revenue v/s Expenses (Catogerized) </h2>
     <canvas id="barChart" width = "1000px"></canvas>
 	</div>
@@ -108,8 +112,8 @@
   </div>
   </div>
   
-<script src="jspdf.js"></script>
-<script src="autotable.js"></script>
+<script src="import/jspdf.js"></script>
+<script src="import/autotable.js"></script>
 <script src="pdfdownload.js"></script>
  
 <script>
@@ -126,8 +130,10 @@ window.addEventListener("load", () => {
   setTimeout(() => {
     loader.style.display = "none";
     
-  }, 750); 
+  }, 5100); 
 });
+
+
 
 const setv = document.getElementById("visible");
 const months = [
@@ -151,6 +157,8 @@ const months = [
 	
     const all = JSON.parse(localStorage.getItem("transactions") || "[]");
     const current = all.filter(t => t.acode === dcode);
+	if(current.length!= 0)
+	{
 
     let receipts = [], payments = [];
     let incomeTotal = 0, expenseTotal = 0;
@@ -192,6 +200,15 @@ const months = [
 
     renderPieChart("incomeChart", incomePie, "Income");
     renderPieChart("expenseChart", expensePie, "Expense");
+	}
+	else
+	{
+		const errorSound = new Audio('sound/error.mp3'); 
+			errorSound.play();
+		alertCustom("The selected time period has no transactions!");
+		
+	}
+	
 	});
   }
 
@@ -387,10 +404,53 @@ function formatIndianNumber(num) {
 function removeTrailingZero(val) {
   return val.replace(/\.00$/, ''); 
 }
+const cards = document.querySelectorAll('.tilt');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (x - centerX) / 10;
+        card.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+      });
 
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+      });
+    });
  
 </script>
 
+
+
+
+
+<script>
+
+document.addEventListener('mousemove', e => {
+  const glow = document.createElement('div');
+  glow.className = 'trail';
+  glow.style.left = `${e.clientX}px`;
+  glow.style.top = `${e.clientY}px`;
+  document.body.appendChild(glow);
+
+  setTimeout(() => glow.remove(), 150);
+});
+
+
+document.addEventListener('click', e => {
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  ripple.style.left = `${e.clientX}px`;
+  ripple.style.top = `${e.clientY}px`;
+  document.body.appendChild(ripple);
+
+  setTimeout(() => ripple.remove(), 800);
+});
+</script>
 
 </body>
 </html>
