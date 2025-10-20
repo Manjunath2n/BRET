@@ -340,7 +340,7 @@ a {
   position: absolute;
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #000000, #00000);
+  background: linear-gradient(135deg, #000000, #000000);
   opacity: 0.9;
   border: 2px solid white;
 }
@@ -494,4 +494,17 @@ a {
     transform: translate(-50%, -50%) scale(8);
   }
 }
+
+@media (max-width: 600px) {
+  .chartcbar {
+    width: 100% !important; 
+    max-width: 300px !important; 
+    height: auto !important;
+    padding: 5px !important; 
+  }
+  h2{
+		font-size:1em;
+  }
+}
+
 

@@ -144,3 +144,30 @@ display:flex;
 	  animation: fadeIn 1s ease;
 	 
     }
+.month-cell {
+  border: 2px solid white;
+  color: white;
+  background: transparent;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  padding: 10px;
+}
+
+.month-cell:hover {
+ background: white;
+  color: black;
+  
+}
+
+
+
+.active {
+  
+  background: white;
+  color: black;
+}

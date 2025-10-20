@@ -4,6 +4,7 @@
   
   <title>HOME</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="favicon.png">
   <script src="import/chart.js"></script>
   <script src="dialog/calendar.js"></script>
   <script src="dialog/dialog.js"></script>
@@ -79,7 +80,7 @@
   </div>
 <div class= "cflow">
   <div class="chartcbar tilt">
-    <h2>Revenue v/s Expenses (Catogerized) </h2>
+    <h2>Revenue v/s Expenses (Categorised) </h2>
     <canvas id="barChart" width = "1000px"></canvas>
 	</div>
   </div>
@@ -412,8 +413,8 @@ const cards = document.querySelectorAll('.tilt');
         const y = e.clientY - rect.top;
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 10;
-        const rotateY = (x - centerX) / 10;
+        const rotateX = (y - centerY) / 12;
+        const rotateY = (x - centerX) / 13;
         card.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
       });
 
